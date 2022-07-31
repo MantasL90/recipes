@@ -1,18 +1,19 @@
-package lt.codeacademy.dishrecipes.recipes;
+package lt.codeacademy.dishrecipes.recipes.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lt.codeacademy.dishrecipes.users.entities.User;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
+
 import java.util.UUID;
 
 @Entity
@@ -30,24 +31,30 @@ public class Recipe {
     @Size(min=3, max=50)
     private String title;
 
+    private boolean isPublished;
+
     @NotBlank
-    @Size(max=255)
     private String description;
 
     @NotBlank
-    @Size(max=255)
+    @Size(min = 3, max = 255)
     private String ingredients;
 
     @NotBlank
-    @Size(max=255)
-    private String productionProcess;
+    @Size(min = 3, max = 255)
+    private String preparation;
+
+    @NotBlank
+    @Size(min = 3, max = 255)
+    private String preparationTime;
 
     @NotNull
     @Positive
-    private BigDecimal preparationTime;
+    private Integer servings;
 
-    @NotNull
-    @Positive
-    private BigDecimal numberOfServings;
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
 
 }
+

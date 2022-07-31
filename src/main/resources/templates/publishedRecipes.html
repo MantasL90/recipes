@@ -2,18 +2,13 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="fragments/layout(title=#{recipesPage.title}, content=~{:: #main})">
+      th:replace="fragments/layout(title=#{recipes.myrecipes.title}, content=~{:: #main})">
 
 <div class="container" id="main">
-    <div th:replace="fragments/common :: successMessage(${message})">
-    </div>
-    <div th:if="${param.message ne null}" class="alert alert-success" role="alert">
-        <span th:text="#{${param.message}}"></span>
-    </div>
     <div class="row mt-2">
         <div class="d-flex justify-content-between">
             <div>
-                <form method="GET" th:action="@{/recipes/search}" class="d-flex">
+                <form method="GET" th:action="@{/public/publishedRecipes/search}" class="d-flex">
                     <input class="form-control mx-2" name="title" th:value="${param.title}">
                     <button class="btn btn-primary" th:text="search">Search</button>
                 </form>
@@ -39,7 +34,6 @@
                     </a>
                 </th>
                 <th>Description</th>
-                <th>Published</th>
                 <th>Preparation time</th>
                 <th>Number of servings</th>
             </tr>
@@ -48,7 +42,6 @@
             <tr th:each="recipe : ${recipes}">
                 <td th:text="${recipe.title}">Samsung S23</td>
                 <td th:text="${recipe.description}">Very good, very nice</td>
-                <td th:text="${recipe.isPublished() == false ? 'unpublished' : 'published'}">10000.00</td>
                 <td th:text="${recipe.preparationTime}">10000.00</td>
                 <td th:text="${recipe.servings}">10000.00</td>
                 <td class="d-flex">
@@ -56,22 +49,6 @@
                         <a class="btn btn-primary" th:href="@{/recipes/{id}/review(id=${recipe.id})}"
                            th:text="'Review'"></a>
                     </div>
-                    <div th:object="${addCategoryDTO}" class="px-1">
-                        <a class="btn btn-primary" th:href="@{/recipes/{id}(id=${recipe.id})}" th:text="'Edit'"></a>
-                    </div>
-                    <form class="px-1" th:action="@{/recipes/{id}/publish(id=${recipe.id})}" method="POST">
-                        <button class="btn btn-success">
-                            Publish
-                        </button>
-                    </form>
-                    <form class="px-1" th:action="@{/recipes/{id}/unpublish(id=${recipe.id})}" method="POST">
-                        <button class="btn btn-success">
-                            Unpublish
-                        </button>
-                    </form>
-                    <form class="px-1" th:action="@{/recipes/{id}/delete(id=${recipe.id})}" method="POST">
-                        <button class="btn btn-danger" th:text="'Delete'"></button>
-                    </form>
                 </td>
             </tr>
             </tbody>
@@ -103,6 +80,5 @@
             </li>
         </ul>
     </div>
-
 </div>
 </html>

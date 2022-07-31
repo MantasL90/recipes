@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="fragments/layout(title=#{recipeDetailsPage.title}, content=~{:: #main})">
 
-</body>
+<div class="container" id="main">
+    <div >
+        <h1 th:text="*{recipe.title}">fsd</h1>
+        <div>
+            <p th:text="*{recipe.description}">f</p>
+        </div>
+        <div>
+            <p th:text="*{recipe.ingredients}">f</p>
+            <p th:text="*{recipe.preparation}">f</p>
+        </div>
+        <div>
+            <span th:text="*{recipe.preparationTime}">f</span>
+            <span th:text="*{recipe.servings}">f</span>
+
+        </div>
+    </div>
+</div>
 </html>

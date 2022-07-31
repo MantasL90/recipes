@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<footer th:fragment="footer"
+        class="footer mt-auto py-3 bg-light text-center">
+    <div class="container text-muted">
+        companyinfo missing
+    </div>
+</footer>
+
+<div th:fragment="successMessage(message)"
+     th:if="${message ne null}" class="alert alert-success" role="alert">
+    <span th:text="${message}"></span>
+</div>
+
+<header class="p-3 bg-dark text-white mb-2" th:fragment="header">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a th:href="@{/recipes}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <img class="logoImg" th:src="@{/images/logo2.png}" height="50" width="60"/>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li>
+                    <a th:href="@{/public/publishedRecipes}" th:text="#{menu.publishedRecipes}"
+                       th:classappend="${#httpServletRequest.requestURI  eq '/public/publishedRecipes' ? 'text-white' : 'text-secondary'}"
+                       class="nav-link px-2">Recipes</a>
+                </li>
+                <li>
+                    <a th:href="@{/private/recipes}" th:text="#{menu.recipes}"
+                       th:classappend="${#httpServletRequest.requestURI eq '/private/recipes' ? 'text-white' : 'text-secondary'}"
+                       class="nav-link px-2">About</a>
+                </li>
+            </ul>
+
+            <div class="text-end">
+                <li class="d-inline-block mx-4">
+                    <a th:href="@{''(lang='lt')}" th:if="${#locale.toString() == 'en'}">
+                        <img th:src="@{/images/lt_flag.png}" class="language-selector"/>
+                    </a>
+                    <a th:href="@{''(lang='en')}" th:if="${#locale.toString() == 'lt'}">
+                        <img th:src="@{/images/en_flag.png}" class="language-selector"/>
+                    </a>
+                </li>
+                <th:block>
+                    <a th:href="@{/login}" class="btn btn-outline-light me-2">Login</a>
+                    <button type="button" class="btn btn-warning">Sign-up</button>
+                </th:block>
+
+                <form th:action="@{/logout}" method="POST" class="d-inline-block"
+                     >
+                    <span ></span>
+                    <button type="submit" class="btn btn-outline-light me-2">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+</html>

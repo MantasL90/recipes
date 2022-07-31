@@ -1,32 +1,77 @@
 package lt.codeacademy.dishrecipes.recipes;
 
 import lombok.AllArgsConstructor;
+import lt.codeacademy.dishrecipes.recipes.entities.Recipe;
 import lt.codeacademy.dishrecipes.recipes.errors.RecipeNotFoundException;
+import lt.codeacademy.dishrecipes.recipes.repos.JpaRecipesRepository;
 import lt.codeacademy.dishrecipes.recipes.repos.RecipesRepository;
+import lt.codeacademy.dishrecipes.users.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
 @Service
 public class RecipesService {
 
-    private final RecipesRepository recipesRepository;
+    private final JpaRecipesRepository recipesRepository;
 
-    public Page<Recipe> getRecipes(Pageable pageable) {
-        return recipesRepository.findAll(pageable);
+//    public Page<Recipe> getRecipes(Pageable pageable) {
+//        return recipesRepository.findAll(pageable);
+//    }
+
+    public Page<Recipe> getRecipes(Pageable pageable, User user) {
+
+        if(user != null){
+            String userRole = user.getRole().getName();
+            switch (userRole) {
+//                case "USER" -> {
+//                    return getUserRecipes(pageable, user);
+//                }
+                case "ADMIN" -> {
+                    return recipesRepository.findAll(pageable);
+                }
+                default -> {
+                    recipesRepository.findAllPublishedRecipes(pageable);
+                }
+            }
+        }
+
+        return recipesRepository.findAllPublishedRecipes(pageable);
     }
+
 
     public void createRecipe(Recipe recipe) {
 
         UUID recipeId = UUID.randomUUID();
         recipe.setId(recipeId);
+        recipe.setPublished(false);
 
         recipesRepository.save(recipe);
     }
+
+    public Recipe publishRecipe(UUID id) {
+
+        Recipe recipeToPublish = getRecipe(id);
+        recipeToPublish.setPublished(true);
+
+        recipesRepository.save(recipeToPublish);
+
+        return recipeToPublish;
+    }
+
+    public Recipe unPublishRecipe(UUID id) {
+
+        Recipe recipeToPublish = getRecipe(id);
+        recipeToPublish.setPublished(false);
+
+        recipesRepository.save(recipeToPublish);
+
+        return recipeToPublish;
+    }
+
 
     public Recipe getRecipe(UUID id) {
 
@@ -47,9 +92,21 @@ public class RecipesService {
         return recipeToRemove;
     }
 
-    public List<Recipe> search(String title) {
+//    private Page<Recipe> getUserRecipes(Pageable pageable, User user) {
+//
+//        String username = user.getUsername();
+//        return recipesRepository.findRecipesByUsername(username, pageable);
+//    }
 
-        return recipesRepository.findByTitleContainingIgnoreCase(title);
+
+    public Page<Recipe> findAllRecipesByTitle(String title, Pageable pageable) {
+
+        return recipesRepository.findByTitleContainingIgnoreCase(title,pageable);
+    }
+
+    public Page<Recipe> findAllPublishedRecipesByTitle(String title, Pageable pageable) {
+
+        return recipesRepository.findPublishedRecipeByTitle(title,pageable);
     }
 
 }

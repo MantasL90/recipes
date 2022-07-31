@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="fragments/layout(title=#{recipeFormPage.title}, content=~{:: #main})">
 
-</body>
+<div class="container" id="main">
+    <h1 class="text-center">New recipe</h1>
+    <form method="post" th:object="${recipe}" th:action="@{'/recipes/create'}">
+        <div class="mb-3">
+            <label class="form-label" th:text="'Pavadinimas'"></label>
+            <input class="form-control" th:field="*{title}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" th:text="'Aprasymas'"></label>
+            <textarea class="form-control" th:field="*{description}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" th:text="'Ingridientai'"></label>
+            <textarea class="form-control" th:field="*{ingredients}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" th:text="'Praruosimo budas'"></label>
+            <textarea class="form-control" th:field="*{preparation}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" th:text="'Gaminimo laikas'"></label>
+            <input class="form-control" th:field="*{preparationTime}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" th:text="'Porciju skaicius'"></label>
+            <input class="form-control" th:field="*{servings}">
+        </div>
+        <div class="d-md-flex justify-content-md-center">
+            <button type="submit">
+                Create recipe
+                <i class="fa-solid fa-upload"></i>
+            </button>
+        </div>
+    </form>
+</div>
 </html>
