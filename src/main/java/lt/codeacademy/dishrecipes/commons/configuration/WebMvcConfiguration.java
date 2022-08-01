@@ -55,5 +55,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("loginPage");
         registry.addRedirectViewController("/", "/public/publishedRecipes");
+//        registry.addViewController("/").setViewName("publishedRecipes");
+
     }
 }

@@ -30,7 +30,6 @@ public class User implements UserDetails {
     public Set<Role> getAuthorities() {
         return Set.of(role);
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;

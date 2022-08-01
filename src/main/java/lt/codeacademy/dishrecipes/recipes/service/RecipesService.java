@@ -1,10 +1,10 @@
-package lt.codeacademy.dishrecipes.recipes;
+package lt.codeacademy.dishrecipes.recipes.service;
 
 import lombok.AllArgsConstructor;
 import lt.codeacademy.dishrecipes.recipes.entities.Recipe;
 import lt.codeacademy.dishrecipes.recipes.errors.RecipeNotFoundException;
 import lt.codeacademy.dishrecipes.recipes.repos.JpaRecipesRepository;
-import lt.codeacademy.dishrecipes.recipes.repos.RecipesRepository;
+import lt.codeacademy.dishrecipes.users.entities.Role;
 import lt.codeacademy.dishrecipes.users.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +21,9 @@ public class RecipesService {
 
     public Page<Recipe> getRecipes(Pageable pageable, User user) {
 
+        if (user != null) {
 
-
-        if(user != null){
-            System.out.println("USER: "+ user);
-            System.out.println("USER ROLE:"+user.getRole().getName());
-
-            String userRole = user.getRole().getName();
-            switch (userRole) {
+            switch (user.getRole().getName()) {
                 case "USER" -> {
                     return getUserRecipes(pageable, user);
                 }
@@ -36,10 +31,14 @@ public class RecipesService {
                     return recipesRepository.findAll(pageable);
                 }
                 default -> {
-                    recipesRepository.findAllPublishedRecipes(pageable);
+                    return recipesRepository.findAllPublishedRecipes(pageable);
                 }
             }
         }
+        return recipesRepository.findAllPublishedRecipes(pageable);
+    }
+
+    public Page<Recipe> getPublishedRecipes(Pageable pageable) {
         return recipesRepository.findAllPublishedRecipes(pageable);
     }
 
@@ -102,12 +101,12 @@ public class RecipesService {
 
     public Page<Recipe> findAllRecipesByTitle(String title, Pageable pageable) {
 
-        return recipesRepository.findByTitleContainingIgnoreCase(title,pageable);
+        return recipesRepository.findByTitleContainingIgnoreCase(title, pageable);
     }
 
     public Page<Recipe> findAllPublishedRecipesByTitle(String title, Pageable pageable) {
 
-        return recipesRepository.findPublishedRecipeByTitle(title,pageable);
+        return recipesRepository.findPublishedRecipeByTitle(title, pageable);
     }
 
 }

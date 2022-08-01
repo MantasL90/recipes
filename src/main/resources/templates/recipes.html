@@ -19,7 +19,7 @@
                 </form>
             </div>
             <div>
-                <a class="btn btn-primary" th:href="@{/recipes/create}" th:text="'Create Recipe'">Create Recipe</a>
+                <a sec:authorize="hasAnyRole('ADMIN','USER')" class="btn btn-primary" th:href="@{/recipes/create}" th:text="'Create Recipe'">Create Recipe</a>
             </div>
         </div>
 
@@ -56,10 +56,10 @@
                         <a class="btn btn-primary" th:href="@{/public/recipes/{id}/review(id=${recipe.id})}"
                            th:text="'Review'"></a>
                     </div>
-                    <div th:object="${addCategoryDTO}" class="px-1">
+                    <div sec:authorize="hasAnyRole('ADMIN','USER')" class="px-1">
                         <a class="btn btn-primary" th:href="@{/private/recipes/{id}(id=${recipe.id})}" th:text="'Edit'"></a>
                     </div>
-                    <form class="px-1" th:action="@{/private/recipes/{id}/publish(id=${recipe.id})}" method="POST">
+                    <form sec:authorize="hasAnyRole('ADMIN','USER')" class="px-1" th:action="@{/private/recipes/{id}/publish(id=${recipe.id})}" method="POST">
                         <button class="btn btn-success">
                             Publish
                         </button>
@@ -69,7 +69,7 @@
                             Unpublish
                         </button>
                     </form>
-                    <form class="px-1" th:action="@{/private/recipes/{id}/delete(id=${recipe.id})}" method="POST">
+                    <form sec:authorize="hasAnyRole('ADMIN','USER')" class="px-1" th:action="@{/private/recipes/{id}/delete(id=${recipe.id})}" method="POST">
                         <button class="btn btn-danger" th:text="'Delete'"></button>
                     </form>
                 </td>

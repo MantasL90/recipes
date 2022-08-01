@@ -1,14 +1,15 @@
-package lt.codeacademy.dishrecipes.recipes;
+package lt.codeacademy.dishrecipes.recipes.controllers;
 
 import lombok.AllArgsConstructor;
+import lt.codeacademy.dishrecipes.recipes.service.RecipesService;
 import lt.codeacademy.dishrecipes.recipes.entities.Recipe;
 import lt.codeacademy.dishrecipes.recipes.errors.RecipeNotFoundException;
 import lt.codeacademy.dishrecipes.users.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,7 +26,7 @@ public class RecipesController {
     private final RecipesService recipesService;
 
     @GetMapping("/private/recipes")
-    public String getAllRecipes(@PageableDefault(size = 9) Pageable pageable, Model model, @AuthenticationPrincipal User user) {
+    public String getAllRecipes(@PageableDefault(size = 6) Pageable pageable, Model model, @AuthenticationPrincipal User user) {
 
         Page<Recipe> recipes = recipesService.getRecipes(pageable, user);
         model.addAttribute("recipes", recipes);
@@ -35,10 +35,9 @@ public class RecipesController {
     }
 
     @GetMapping("/public/publishedRecipes")
-    public String getPublishedRecipes(@PageableDefault(size = 9) Pageable pageable, Model model, @AuthenticationPrincipal User user) {
+    public String getPublishedRecipes(@PageableDefault(size = 6) Pageable pageable, Model model) {
 
-        System.out.println("GETTING PUBLISHED RECIPES: "+ user);
-        Page<Recipe> recipes = recipesService.getRecipes(pageable, user);
+        Page<Recipe> recipes = recipesService.getPublishedRecipes(pageable);
         model.addAttribute("recipes", recipes);
 
         return "publishedRecipes";
@@ -99,7 +98,7 @@ public class RecipesController {
 
         return "redirect:/private/recipes";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/private/recipes/{id}/publish")
     public String publishRecipe(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
@@ -109,6 +108,7 @@ public class RecipesController {
         return "redirect:/private/recipes";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/private/recipes/{id}/unpublish")
     public String unpublishRecipe(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
@@ -117,7 +117,6 @@ public class RecipesController {
 
         return "redirect:/private/recipes";
     }
-
 
     @GetMapping("/public/publishedRecipes/search")
     public String searchPublishRecipes(@RequestParam(required = false) String title, Model model, Pageable pageable) {
