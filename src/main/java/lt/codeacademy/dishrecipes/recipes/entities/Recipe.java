@@ -21,6 +21,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "Recipe")
 public class Recipe {
 
     @Id
@@ -53,7 +54,7 @@ public class Recipe {
     private Integer servings;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="username", nullable=false)
     private User user;
 
 }

@@ -18,10 +18,8 @@ public interface JpaRecipesRepository extends JpaRepository<Recipe, UUID>{
     @Query("FROM Recipe r WHERE r.isPublished IS true")
     Page<Recipe> findAllPublishedRecipes(Pageable pageable);
 
-
-//    @Query("FROM Recipe r WHERE r.user_id=:username" )
-//    Page<Recipe> findRecipesByUsername(String username, Pageable pageable);
-
+    @Query("FROM Recipe r WHERE r.user.username=:username")
+    Page<Recipe> findRecipesByUsername(String username, Pageable pageable);
 
     @Query("FROM Recipe r WHERE r.isPublished IS true AND r.title LIKE %:title%" )
     Page<Recipe> findPublishedRecipeByTitle(String title, Pageable pageable);

@@ -1,11 +1,44 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<footer th:fragment="footer"
-        class="footer mt-auto py-3 bg-light text-center">
-    <div class="container text-muted">
-        companyinfo missing
+
+<footer class="bg-dark text-center text-white mt-auto" th:fragment="footer">
+    <div class="container p-4">
+        <section class="mb-4">
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+                <i class="fab fa-google"></i>
+            </a>
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+                <i class="fab fa-instagram"></i>
+            </a>
+
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+                <i class="fab fa-github"></i>
+            </a>
+        </section>
+        <section class="mb-4">
+            <p th:text="#{companyInfo.name}">a</p>
+            <p th:text="#{companyInfo.address}">a</p>
+            <p th:text="#{companyInfo.description}">
+                as
+            </p>
+        </section>
+    </div>
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);" th:text=" #{companyInfo.date}
+    ">
+        as
+        <a class="text-white" th:href="@{/public/publishedRecipes}" th:text="#{companyInfo.name}">uab</a>
     </div>
 </footer>
 
@@ -43,19 +76,18 @@
                         <img th:src="@{/images/en_flag.png}" class="language-selector"/>
                     </a>
                 </li>
-                <th:block>
+                <th:block sec:authorize="isAnonymous()">
                     <a th:href="@{/login}" class="btn btn-outline-light me-2">Login</a>
                     <button type="button" class="btn btn-warning">Sign-up</button>
                 </th:block>
 
-                <form th:action="@{/logout}" method="POST" class="d-inline-block"
-                     >
-                    <span ></span>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST" class="d-inline-block"
+                >
+                    <span class="mx-2" ></span>
                     <button type="submit" class="btn btn-outline-light me-2">Logout</button>
                 </form>
             </div>
         </div>
     </div>
 </header>
-
 </html>

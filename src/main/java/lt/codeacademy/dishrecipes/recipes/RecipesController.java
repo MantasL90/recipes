@@ -37,6 +37,7 @@ public class RecipesController {
     @GetMapping("/public/publishedRecipes")
     public String getPublishedRecipes(@PageableDefault(size = 9) Pageable pageable, Model model, @AuthenticationPrincipal User user) {
 
+        System.out.println("GETTING PUBLISHED RECIPES: "+ user);
         Page<Recipe> recipes = recipesService.getRecipes(pageable, user);
         model.addAttribute("recipes", recipes);
 
@@ -82,12 +83,12 @@ public class RecipesController {
         return "redirect:/private/recipes";
     }
 
-    @GetMapping("/public/publishedRecipes/{id}/review")
+    @GetMapping("/public/recipes/{id}/review")
     public String reviewRecipe(@PathVariable UUID id, Model model) {
 
         model.addAttribute("recipe", recipesService.getRecipe(id));
 
-        return "publishedRecipes";
+        return "recipeDetails";
     }
 
     @PostMapping("/private/recipes/{id}/delete")

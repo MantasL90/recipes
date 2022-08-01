@@ -18,18 +18,20 @@ public class RecipesService {
 
     private final JpaRecipesRepository recipesRepository;
 
-//    public Page<Recipe> getRecipes(Pageable pageable) {
-//        return recipesRepository.findAll(pageable);
-//    }
 
     public Page<Recipe> getRecipes(Pageable pageable, User user) {
 
+
+
         if(user != null){
+            System.out.println("USER: "+ user);
+            System.out.println("USER ROLE:"+user.getRole().getName());
+
             String userRole = user.getRole().getName();
             switch (userRole) {
-//                case "USER" -> {
-//                    return getUserRecipes(pageable, user);
-//                }
+                case "USER" -> {
+                    return getUserRecipes(pageable, user);
+                }
                 case "ADMIN" -> {
                     return recipesRepository.findAll(pageable);
                 }
@@ -38,7 +40,6 @@ public class RecipesService {
                 }
             }
         }
-
         return recipesRepository.findAllPublishedRecipes(pageable);
     }
 
@@ -92,11 +93,11 @@ public class RecipesService {
         return recipeToRemove;
     }
 
-//    private Page<Recipe> getUserRecipes(Pageable pageable, User user) {
-//
-//        String username = user.getUsername();
-//        return recipesRepository.findRecipesByUsername(username, pageable);
-//    }
+    private Page<Recipe> getUserRecipes(Pageable pageable, User user) {
+
+        String username = user.getUsername();
+        return recipesRepository.findRecipesByUsername(username, pageable);
+    }
 
 
     public Page<Recipe> findAllRecipesByTitle(String title, Pageable pageable) {

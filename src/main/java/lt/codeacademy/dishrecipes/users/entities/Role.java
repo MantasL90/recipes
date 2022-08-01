@@ -6,10 +6,12 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "Roles")
 public class Role implements GrantedAuthority {
 
     private static final String ROLE_PREFIX = "ROLE_";
