@@ -1,6 +1,8 @@
 package lt.codeacademy.dishrecipes.users.repos;
 
 import lt.codeacademy.dishrecipes.users.entities.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +16,6 @@ public interface JpaUserRepository extends JpaRepository<User, String> {
     @Query("SELECT u FROM User u JOIN FETCH u.role WHERE u.username = :username")
     Optional<User> findUserWithRoles(@Param("username") String username);
     User findByUsernameEquals(String username);
+
+    Page<User> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="fragments/layout :: layout(title=#{users.register.with.roles.title}, content=~{:: #main})">
+
+<div class="container" id="main">
+    <div th:if="${param.message ne null}" class="alert alert-success" role="alert">
+        <span th:text="#{${param.message}}"></span>
+    </div>
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-8">
+                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <form th:action="@{''}" th:object="${user}" method="POST" class="mb-md-5 mt-md-4 pb-5">
+                                <h2 class="fw-bold mb-2 text-uppercase" th:text="#{users.register.with.roles.title}">
+                                    Register User with role</h2>
+                                <p class="text-white-50 mb-5" th:text="#{users.register.form.desc}">Please enter new
+                                    user information!</p>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <input id="typeUsernameX" class="form-control form-control-lg"
+                                                   th:field="*{username}"/>
+                                            <label class="form-label" for="typeUsernameX" th:text="#{users.username}">Username</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <input id="typeEmailX" class="form-control form-control-lg"
+                                                   th:field="*{emailAddress}"/>
+                                            <label class="form-label" for="typeEmailX" th:text="#{users.emailAddress}">Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <input type="password" id="typePasswordX"
+                                                   class="form-control form-control-lg"
+                                                   th:field="*{password}"/>
+                                            <label class="form-label" for="typePasswordX" th:text="#{users.password}">Password</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <select class="form-select" id="typeRoleX"
+                                                    aria-label="Default select example" th:field="*{role}">
+                                                <option th:value="USER" th:text="#{users.role.user}">Simple User
+                                                </option>
+                                                <option th:value="ADMIN" th:text="#{users.role.admin}">admin</option>
+                                            </select>
+                                            <label class="form-label" for="typeRoleX"
+                                                   th:text="#{users.role}">Role</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <input id="typeNameX" class="form-control form-control-lg"
+                                                   th:field="*{name}"/>
+                                            <label class="form-label" for="typeNameX"
+                                                   th:text="#{users.name}">Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+
+                                        <div class="form-outline form-white mb-4">
+                                            <input id="typeSurnameX" class="form-control form-control-lg"
+                                                   th:field="*{surname}"/>
+                                            <label class="form-label" for="typeSurnameX" th:text="#{users.surname}">Surname</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <input type="password" id="typeConfirmPasswordX"
+                                                   class="form-control form-control-lg"
+                                            />
+                                            <label class="form-label" for="typePasswordX"
+                                                   th:text="#{users.password.confirm}">Password</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <button class="btn btn-outline-light btn-lg px-5" type="submit"
+                                        th:text="#{users.register.with.roles.btn}">Register
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

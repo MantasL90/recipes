@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="fragments/layout :: layout(title=#{error.title}, content=~{:: #main})">
+
+
+<div class="container" id="main">
+    <h1 th:text="#{error.title}"></h1>
+</div>
+</html>

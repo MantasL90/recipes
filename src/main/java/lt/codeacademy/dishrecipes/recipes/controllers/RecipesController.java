@@ -1,9 +1,10 @@
 package lt.codeacademy.dishrecipes.recipes.controllers;
 
 import lombok.AllArgsConstructor;
+import lt.codeacademy.dishrecipes.commons.exceptions.RecipeException;
 import lt.codeacademy.dishrecipes.recipes.service.RecipesService;
 import lt.codeacademy.dishrecipes.recipes.entities.Recipe;
-import lt.codeacademy.dishrecipes.recipes.errors.RecipeNotFoundException;
+
 import lt.codeacademy.dishrecipes.users.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +44,7 @@ public class RecipesController {
         return "publishedRecipes";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/private/recipes/create")
     public String openRecipeForm(Model model) {
 
@@ -50,20 +52,18 @@ public class RecipesController {
         return "recipeForm";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping("/private/recipes/create")
-    public String createRecipe(@Valid Recipe recipe, BindingResult errors, RedirectAttributes redirectAttributes) {
+    public String createRecipe(Recipe recipe, @AuthenticationPrincipal User user, BindingResult errors, RedirectAttributes redirectAttributes) {
 
-        if (errors.hasErrors()) {
-            return "recipeForm";
-        }
-
-        recipesService.createRecipe(recipe);
-        redirectAttributes.addFlashAttribute("message",
-                String.format("Recipe '%s' successfully created!", recipe.getTitle()));
+        recipesService.createRecipe(recipe, user);
+        redirectAttributes.addFlashAttribute("message", "msg.recipe.created");
+        redirectAttributes.addFlashAttribute("recipeTitle", recipe.getTitle());
 
         return "redirect:/private/recipes";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("private/recipes/{id}")
     public String openRecipe(@PathVariable UUID id, Model model) {
 
@@ -72,12 +72,14 @@ public class RecipesController {
         return "recipeForm";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping("/private/recipes/{id}")
-    public String updateRecipe(Recipe recipe, Model model) {
+    public String updateRecipe(@PathVariable UUID id, Recipe recipe, RedirectAttributes redirectAttributes) {
 
-        recipesService.updateRecipe(recipe);
+        recipesService.updateRecipe(id, recipe);
+        redirectAttributes.addFlashAttribute("message", "msg.recipe.updated");
+        redirectAttributes.addFlashAttribute("recipeTitle", recipe.getTitle());
 
-        model.addAttribute("message", String.format("Recipe '%s' successfully updated!", recipe.getTitle()));
 
         return "redirect:/private/recipes";
     }
@@ -90,20 +92,27 @@ public class RecipesController {
         return "recipeDetails";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping("/private/recipes/{id}/delete")
     public String deleteRecipe(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
-        Recipe recipe = recipesService.deleteRecipe(id);
-        redirectAttributes.addAttribute("message", String.format("Recipe '%s' successfully deleted!", recipe.getTitle()));
+        String deletedRecipeTitle = recipesService.getRecipe(id).getTitle();
+
+        recipesService.deleteRecipe(id);
+        redirectAttributes.addFlashAttribute("message", "msg.recipe.deleted");
+        redirectAttributes.addFlashAttribute("recipeTitle", deletedRecipeTitle);
+
 
         return "redirect:/private/recipes";
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/private/recipes/{id}/publish")
     public String publishRecipe(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
-        Recipe recipe = recipesService.publishRecipe(id);
-        redirectAttributes.addAttribute("message", String.format("Recipe '%s' successfully published!", recipe.getTitle()));
+        recipesService.publishRecipe(id);
+        redirectAttributes.addFlashAttribute("message", "msg.recipe.published");
+        redirectAttributes.addFlashAttribute("recipeTitle", recipesService.publishRecipe(id).getTitle());
 
         return "redirect:/private/recipes";
     }
@@ -113,13 +122,23 @@ public class RecipesController {
     public String unpublishRecipe(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
         Recipe recipe = recipesService.unPublishRecipe(id);
-        redirectAttributes.addAttribute("message", String.format("Recipe '%s' successfully published!", recipe.getTitle()));
-
+        redirectAttributes.addFlashAttribute("message", "msg.recipe.unpublished");
+        redirectAttributes.addFlashAttribute("recipeTitle", recipesService.publishRecipe(id).getTitle());
         return "redirect:/private/recipes";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/private/recipes/search")
+    public String searchPrivate(@RequestParam(required = false) String title, Model model, Pageable pageable, @AuthenticationPrincipal User user) {
+
+        Page<Recipe> resultList =  recipesService.searchPrivate(title, pageable, user);
+        model.addAttribute("recipes", resultList);
+
+        return "recipes";
+    }
+
     @GetMapping("/public/publishedRecipes/search")
-    public String searchPublishRecipes(@RequestParam(required = false) String title, Model model, Pageable pageable) {
+    public String search(@RequestParam(required = false) String title, Model model, Pageable pageable) {
 
         Page<Recipe> resultList = recipesService.findAllPublishedRecipesByTitle(title, pageable);
         model.addAttribute("recipes", resultList);
@@ -127,21 +146,4 @@ public class RecipesController {
         return "publishedRecipes";
     }
 
-    @GetMapping("/private/recipes/search")
-    public String search(@RequestParam(required = false) String title, Model model, Pageable pageable) {
-
-        Page<Recipe> resultList = recipesService.findAllRecipesByTitle(title, pageable);
-        model.addAttribute("recipes", resultList);
-
-        return "recipes";
-    }
-
-    @ExceptionHandler(RecipeNotFoundException.class)
-    public String recipeNotFound(RecipeNotFoundException e, Model model) {
-
-        model.addAttribute("messageCode", e.getMessage());
-        model.addAttribute("recipeId", e.getId());
-
-        return "error/recipeNotFoundPage";
-    }
 }

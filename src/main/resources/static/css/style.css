@@ -4,9 +4,16 @@
     padding-right: 20px;
 }
 
+.error-cont {
+
+}
 .error {
-    color: indianred;
-    border-color: red;
+    background: #f13b3b;
+    padding: 2px 0;
+    color: #ddd;
+    font-size: 10px;
+    border-radius: 5px;
+    width: 229px;
 }
 
 .language-selector {
@@ -21,3 +28,4 @@
 .logoImg {
     margin-right: 15px;
 }
+

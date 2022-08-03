@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="fragments/layout :: layout(title=#{users.title}, content=~{:: #main})">
+
+
+<div class="container" id="main">
+    <div th:replace="fragments/common :: successMsg(${message}, ${recipeTitle})"></div>
+    <div th:replace="fragments/common :: failMsg(${failMessage})"></div>
+    <div th:if="${param.message ne null}" class="alert alert-success" role="alert">
+        <span th:text="#{${param.message}}"></span>
+    </div>
+    <div class="row mt-2">
+        <div class="d-flex justify-content-between">
+            <div>
+                <form method="GET" th:action="@{/private/users/search}" class="d-flex">
+                    <input class="form-control mx-2" name="username" th:value="${param.username}">
+                    <button class="btn btn-primary" th:text="#{form.button.search}">Search</button>
+                </form>
+            </div>
+            <div>
+                <a sec:authorize="hasAnyRole('ADMIN')" class="btn btn-primary"  th:href="@{/private/user/create}" th:text="#{form.button.create}">Create</a>
+            </div>
+        </div>
+        <div th:if="${users.empty}">
+            <h1 th:text="#{users.NoUsersFound}">No </h1>
+        </div>
+        <table th:if="${not users.empty}" class="table table-striped mt-4">
+            <thead>
+            <tr>
+                <th th:text="#{users.username}">Title</th>
+                <th th:text="#{users.name}">name</th>
+                <th th:text="#{users.surname}">surname</th>
+                <th th:text="#{users.emailAddress}">emailAddress</th>
+                <th th:text="#{users.role}">Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.username}">a</td>
+                <td th:text="${user.name}">a</td>
+                <td th:text="${user.surname}">a</td>
+                <td th:text="${user.emailAddress}">a</td>
+                <td th:text="${user.role.getName()}">a</td>
+                <td class="d-flex">
+                    <div class="px-1">
+                        <a class="btn btn-primary" th:href="@{/private/user/{username}(username=${user.getUsername()})}"
+                           th:text="#{form.button.edit}"></a>
+                    </div>
+                     <form class="px-1"
+                          th:action="@{/private/user/{username}/delete(username=${user.getUsername()})}" method="POST">
+                         <button class="btn btn-danger" th:text="#{form.button.delete}"></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="pagination mt-4"
+            th:with="order=${users.sort.sorted ? users.sort.iterator().next() : null},
+                 ignoreCase=${order ne null and order.ignoreCase ? 'ignoreCase' : ''},
+                 orderParam=${order ne null ? order.property + ',' + order.direction.name() + ',' + ignoreCase : null}">
+            <li class="page-item"
+                th:classappend="${users.hasPrevious() ? '' : 'disabled'}">
+                <a class="page-link" th:href="@{''(page=${users.number - 1}, sort=${orderParam})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li th:each="page : ${#numbers.sequence(1, users.totalPages)}" class="page-item"
+                th:classappend="${users.number == page - 1 ? 'active' : ''}">
+                <a th:href="@{''(page=${page - 1}, sort=${orderParam})}"
+                   th:text="${page}" class="page-link">1</a>
+            </li>
+
+            <li class="page-item"
+                th:classappend="${users.hasNext() ? '' : 'disabled'}">
+                <a class="page-link" th:href="@{''(page=${users.number + 1}, sort=${orderParam})}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+</html>

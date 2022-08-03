@@ -2,41 +2,69 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="fragments/layout(title=#{recipeFormPage.title}, content=~{:: #main})">
+      th:replace="fragments/layout :: layout(title=#{recipes.form.title}, content=~{:: #main})">
 
 <div class="container" id="main">
-    <h1 class="text-center">New recipe</h1>
-    <form method="post" th:object="${recipe}" th:action="@{'/private/recipes/create'}">
-        <div class="mb-3">
-            <label class="form-label" th:text="'Pavadinimas'"></label>
-            <input class="form-control" th:field="*{title}">
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-8">
+                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <form th:action="@{''}" th:object="${recipe}" method="POST"
+                                  class="mb-md-5 mt-md-4 pb-2">
+                                <h2 class="fw-bold mb-2 text-uppercase" th:text="#{recipes.title}">Register</h2>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-outline form-white mb-4">
+                                            <input class="form-control" th:field="*{title}"/>
+                                            <label class="form-label" th:text="#{recipe.title}">Username</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-outline form-white mb-4">
+                                            <input class="form-control" th:field="*{description}"/>
+                                            <label class="form-label"
+                                                   th:text="#{recipes.description}">emailAddress</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-outline form-white mb-4">
+                                            <input class="form-control" th:field="*{ingredients}"/>
+                                            <label class="form-label" th:text="#{recipes.ingredients}">password</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-outline form-white mb-4">
+                                            <input class="form-control" th:field="*{preparation}"/>
+                                            <label class="form-label"
+                                                   th:text="#{recipes.preparation}">password</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <input class="form-control" th:field="*{preparationTime}"/>
+                                            <label class="form-label"
+                                                   th:text="#{recipes.preparation.time}">password</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-outline form-white mb-4">
+                                            <input class="form-control" th:field="*{servings}"/>
+                                            <label class="form-label" th:text="#{recipes.servings}">surname</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-light btn-lg px-5" type="submit"
+                                        th:text="#{recipes.form.btn}">Register
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label class="form-label" th:text="'Aprasymas'"></label>
-            <textarea class="form-control" th:field="*{description}"></textarea>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:text="'Ingridientai'"></label>
-            <textarea class="form-control" th:field="*{ingredients}"></textarea>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:text="'Praruosimo budas'"></label>
-            <textarea class="form-control" th:field="*{preparation}"></textarea>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:text="'Gaminimo laikas'"></label>
-            <input class="form-control" th:field="*{preparationTime}">
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:text="'Porciju skaicius'"></label>
-            <input class="form-control" th:field="*{servings}">
-        </div>
-        <div class="d-md-flex justify-content-md-center">
-            <button type="submit">
-                Create recipe
-                <i class="fa-solid fa-upload"></i>
-            </button>
-        </div>
-    </form>
+    </section>
+
 </div>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="fragments/layout(title=#{recipes.myrecipes.title}, content=~{:: #main})">
+      th:replace="fragments/layout :: layout(title=#{recipes.published.title}, content=~{:: #main})">
 
 <div class="container" id="main">
     <div class="row mt-2">
@@ -14,7 +14,7 @@
                 </form>
             </div>
             <div>
-                <a class="btn btn-primary" th:href="@{/private/recipes/create}" th:text="'Create Recipe'">Create Recipe</a>
+                <a class="btn btn-primary" th:href="@{/private/recipes/create}" th:text="#{recipes.create.after.login}">Create Recipe</a>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
             <thead>
             <tr>
                 <th>
-                    <span>Title</span>
+                    <span th:text="#{recipe.title}">Title</span>
                     <a th:with="ascending=${recipes.sort.getOrderFor('title')?.direction?.name() eq 'ASC'}"
                        th:href="@{''(sort='title,' + ${ascending ? 'DESC' : 'ASC'} + ',ignoreCase')}">
                         <i class="fa-solid"
@@ -33,9 +33,9 @@
                         ></i>
                     </a>
                 </th>
-                <th>Description</th>
-                <th>Preparation time</th>
-                <th>Number of servings</th>
+                <th th:text="#{recipes.description}">Number of servings</th>
+                <th th:text="#{recipes.preparation.time}">Description</th>
+                <th th:text="#{recipes.servings}">Preparation time</th>
             </tr>
             </thead>
             <tbody>
@@ -47,7 +47,7 @@
                 <td class="d-flex">
                     <div class="px-1">
                         <a class="btn btn-primary" th:href="@{/public/recipes/{id}/review(id=${recipe.id})}"
-                           th:text="'Review'"></a>
+                           th:text="#{form.button.review}"></a>
                     </div>
                 </td>
             </tr>

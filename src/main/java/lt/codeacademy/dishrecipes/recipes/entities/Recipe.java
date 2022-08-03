@@ -54,7 +54,7 @@ public class Recipe {
     private Integer servings;
 
     @ManyToOne
-    @JoinColumn(name="username", nullable=false)
+    @JoinColumn(name="username")
     private User user;
 
 }

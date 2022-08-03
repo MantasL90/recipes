@@ -2,7 +2,8 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="fragments/layout(title=#{recipeDetailsPage.title}, content=~{:: #main})">
+      th:replace="fragments/layout :: layout(title=#{recipes.details.title}, content=~{:: #main})">
+
 
 <div class="container" id="main">
     <div >

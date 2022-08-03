@@ -1,15 +1,16 @@
 package lt.codeacademy.dishrecipes.recipes.service;
 
 import lombok.AllArgsConstructor;
+import lt.codeacademy.dishrecipes.commons.exceptions.RecipeException;
 import lt.codeacademy.dishrecipes.recipes.entities.Recipe;
 import lt.codeacademy.dishrecipes.recipes.errors.RecipeNotFoundException;
 import lt.codeacademy.dishrecipes.recipes.repos.JpaRecipesRepository;
-import lt.codeacademy.dishrecipes.users.entities.Role;
 import lt.codeacademy.dishrecipes.users.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -18,6 +19,17 @@ public class RecipesService {
 
     private final JpaRecipesRepository recipesRepository;
 
+
+    public Page<Recipe> searchPrivate(String title, Pageable pageable, User user) {
+
+        if (user.getRole().getName().equalsIgnoreCase("USER")) {
+
+            return recipesRepository.searchByTitleAndUsername(user.getUsername(), title, pageable);
+        }
+        return recipesRepository.findByTitleContainingIgnoreCase(title, pageable);
+
+
+    }
 
     public Page<Recipe> getRecipes(Pageable pageable, User user) {
 
@@ -43,13 +55,26 @@ public class RecipesService {
     }
 
 
-    public void createRecipe(Recipe recipe) {
+    public void createRecipe(Recipe recipe, User user) {
 
         UUID recipeId = UUID.randomUUID();
         recipe.setId(recipeId);
         recipe.setPublished(false);
-
+        recipe.setUser(user);
         recipesRepository.save(recipe);
+    }
+
+    @Transactional
+    public void updateRecipe(UUID id, Recipe recipe) {
+
+
+        Recipe oldRecipe = getRecipe(id);
+        oldRecipe.setTitle(recipe.getTitle());
+        oldRecipe.setDescription(recipe.getDescription());
+        oldRecipe.setIngredients(recipe.getIngredients());
+        oldRecipe.setPreparation(recipe.getPreparation());
+        oldRecipe.setPreparationTime(recipe.getPreparationTime());
+        oldRecipe.setServings(recipe.getServings());
     }
 
     public Recipe publishRecipe(UUID id) {
@@ -76,14 +101,10 @@ public class RecipesService {
     public Recipe getRecipe(UUID id) {
 
         return recipesRepository.findById(id)
-                .orElseThrow(() -> new RecipeNotFoundException("", null));
+                .orElseThrow(() -> new RecipeException("msg.recipe.recipeNotFound"));
     }
 
-    public void updateRecipe(Recipe recipe) {
-
-        recipesRepository.save(recipe);
-    }
-
+    @Transactional
     public Recipe deleteRecipe(UUID id) {
 
         Recipe recipeToRemove = getRecipe(id);
@@ -104,9 +125,12 @@ public class RecipesService {
         return recipesRepository.findByTitleContainingIgnoreCase(title, pageable);
     }
 
+
+    //   TODO create search for published Recipes
     public Page<Recipe> findAllPublishedRecipesByTitle(String title, Pageable pageable) {
 
         return recipesRepository.findPublishedRecipeByTitle(title, pageable);
     }
+
 
 }

@@ -21,12 +21,14 @@ public interface JpaRecipesRepository extends JpaRepository<Recipe, UUID>{
     @Query("FROM Recipe r WHERE r.user.username=:username")
     Page<Recipe> findRecipesByUsername(String username, Pageable pageable);
 
+    @Query("FROM Recipe r WHERE r.user.username=:username")
+    List<Recipe> findRecipesByUsername(String username);
+
     @Query("FROM Recipe r WHERE r.isPublished IS true AND r.title LIKE %:title%" )
     Page<Recipe> findPublishedRecipeByTitle(String title, Pageable pageable);
 
-
-//    @Query("FROM Recipe r WHERE r.user.id=:id")
-//    Page<Recipe> findUserRecipes(@Param("id") Long id, Pageable pageable);
-
     Page<Recipe> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+
+    @Query("FROM Recipe r WHERE r.user.username=:username AND r.title LIKE %:title%")
+    Page<Recipe> searchByTitleAndUsername(String username, String title, Pageable pageable);
 }
