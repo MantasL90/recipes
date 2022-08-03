@@ -6,20 +6,15 @@
 
 
 <div class="container" id="main">
-    <div >
-        <h1 th:text="*{recipe.title}">fsd</h1>
-        <div>
-            <p th:text="*{recipe.description}">f</p>
-        </div>
-        <div>
-            <p th:text="*{recipe.ingredients}">f</p>
-            <p th:text="*{recipe.preparation}">f</p>
-        </div>
-        <div>
-            <span th:text="*{recipe.preparationTime}">f</span>
-            <span th:text="*{recipe.servings}">f</span>
-
-        </div>
+    <div class="row mt-5 recipe-details">
+        <div class="col-3"></div>
+        <ul class="list-group col-6">
+            <li class="list-group-item p-3 bg-dark text-white mb-2 details-header" aria-current="true" th:text="*{recipe.title}">An active item</li>
+            <li class="list-group-item" th:text="*{recipe.description}">A second item</li>
+            <li class="list-group-item" th:text="*{recipe.ingredients}">A third item</li>
+            <li class="list-group-item" th:text="*{recipe.preparation}">A fourth item</li>
+            <li class="list-group-item" th:text="*{recipe.servings}">And a fifth one</li>
+        </ul>
     </div>
-</div>
+   </div>
 </html>

@@ -15,10 +15,9 @@
     <div class="row mt-2">
         <div class="d-flex justify-content-between">
             <div>
-                <form method="GET" th:text="#{form.button.search}" th:action="@{/private/recipes/search}"
-                      class="d-flex">
+                <form method="GET" th:action="@{/public/publishedRecipes/search}" class="d-flex">
                     <input class="form-control mx-2" name="title" th:value="${param.title}">
-                    <button class="btn btn-primary" th:text="search">Search</button>
+                    <button class="btn btn-primary" th:text="#{form.button.search}">Search</button>
                 </form>
             </div>
             <div>

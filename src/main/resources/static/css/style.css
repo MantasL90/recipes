@@ -4,9 +4,15 @@
     padding-right: 20px;
 }
 
-.error-cont {
 
+.recipe-details{
+    font-size: 20px;
 }
+.details-header {
+    font-size: 26px;
+}
+
+
 .error {
     background: #f13b3b;
     padding: 2px 0;
